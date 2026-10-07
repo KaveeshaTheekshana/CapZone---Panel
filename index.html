@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -477,18 +478,22 @@
       await checkServerHealth();
       
       let users = null;
-      // 1. Try Cloud server first (shows real live data for production and local)
+      // Determine primary and secondary endpoints based on environment
+      const primaryUrl = isLocalHost ? LOCAL_API_URL : CLOUD_API_URL;
+      const secondaryUrl = isLocalHost ? CLOUD_API_URL : LOCAL_API_URL;
+
+      // 1. Try primary server first
       try {
-        const res = await fetch(`${CLOUD_API_URL}/api/admin/srt-users?_t=${Date.now()}`);
+        const res = await fetch(`${primaryUrl}/api/admin/srt-users?_t=${Date.now()}`);
         if (res.ok) {
           users = await res.json();
         }
       } catch (err) {}
 
-      // 2. If cloud didn't respond, try local server
+      // 2. If primary didn't respond, try secondary server
       if (!users || !Array.isArray(users)) {
         try {
-          const res = await fetch(`${LOCAL_API_URL}/api/admin/srt-users?_t=${Date.now()}`);
+          const res = await fetch(`${secondaryUrl}/api/admin/srt-users?_t=${Date.now()}`);
           if (res.ok) {
             users = await res.json();
           }
