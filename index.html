@@ -348,7 +348,7 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-[999] flex flex-col gap-2 pointer-events-none"></div>
 
   <script>
-    const CLOUD_API_URL = 'https://kaveesha.top';
+    const CLOUD_API_URL = 'https://capzone.kaveez.top';
     const LOCAL_API_URL = 'http://localhost:6039';
 
     const isLocalHost = window.location.hostname === 'localhost' || 
@@ -359,8 +359,7 @@
     // Dual-Sync Engine: Sends mutations to Cloud Server (for live capzone.top) and Local Server (for VS Code testing)
     async function apiPost(endpoint, payload) {
       let returnedData = null;
-      const targets = [CLOUD_API_URL];
-      if (isLocalHost) targets.push(LOCAL_API_URL);
+      const targets = [CLOUD_API_URL, LOCAL_API_URL];
 
       await Promise.allSettled(targets.map(async (baseUrl) => {
         try {
@@ -499,7 +498,7 @@
         } catch (err) {}
       }
 
-      if (users && Array.isArray(users) && users.length > 0) {
+      if (users && Array.isArray(users)) {
         allUsers = users;
         localStorage.setItem('capzone_admin_cached_users', JSON.stringify(allUsers));
         renderTable();
@@ -515,7 +514,7 @@
       if (cached) {
         try {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) {
+          if (Array.isArray(parsed)) {
             allUsers = parsed;
             renderTable();
             updateStats();
